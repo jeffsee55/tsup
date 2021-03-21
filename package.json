@@ -15,7 +15,7 @@
   "scripts": {
     "build": "rm -rf dist && tsup src/cli.ts src/index.ts src/rollup.ts --dts",
     "prepublishOnly": "npm run build",
-    "postinstall": "npm run build",
+    "prepare": "npm run build",
     "test": "npm run build && jest"
   },
   "dependencies": {
