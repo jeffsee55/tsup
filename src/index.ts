@@ -277,14 +277,20 @@ export async function build(options: Options) {
 
     if (options.dts) {
       // Run rollup in a worker so it doesn't block the event loop
-      const worker = new Worker(join(__dirname, 'rollup.js'))
-      worker.postMessage({
-        options,
-      })
-      worker.on('message', (data) => {
-        if (data === 'has-error') {
-          process.exitCode = 1
-        }
+      return new Promise((resolve, reject) => {
+        const worker = new Worker(join(__dirname, 'rollup.js'))
+        worker.postMessage({
+          options,
+        })
+        worker.on('exit', () => {
+          return resolve('')
+        })
+        worker.on('message', (data) => {
+          if (data === 'has-error') {
+            process.exitCode = 1
+            return reject('')
+          }
+        })
       })
     }
 
