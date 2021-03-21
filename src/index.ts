@@ -277,8 +277,6 @@ export async function build(options: Options) {
     console.log(makeLabel('CLI', 'info'), `Target: ${options.target}`)
 
     if (options.dts) {
-      const rollup = require('./rollup.js')
-      await rollup(options)
       // Run rollup in a worker so it doesn't block the event loop
       return new Promise((resolve, reject) => {
         const worker = new Worker(join(__dirname, 'rollup.js'))
