@@ -270,12 +270,15 @@ export async function build(options: Options) {
       }
     }
 
+    await buildAll()
     if (!options.target) {
       options.target = 'es2018'
     }
     console.log(makeLabel('CLI', 'info'), `Target: ${options.target}`)
 
     if (options.dts) {
+      const rollup = require('./rollup.js')
+      await rollup(options)
       // Run rollup in a worker so it doesn't block the event loop
       return new Promise((resolve, reject) => {
         const worker = new Worker(join(__dirname, 'rollup.js'))
@@ -293,8 +296,6 @@ export async function build(options: Options) {
         })
       })
     }
-
-    await buildAll()
 
     if (options.watch) {
       await startWatcher()
